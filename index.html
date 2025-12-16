@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyreForge | Professional Tyre Wear Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        :root {
+            --primary: #003366;
+            --primary-light: #004488;
+            --secondary: #cc3300;
+            --secondary-light: #e63900;
+            --accent: #0099cc;
+            --success: #2e7d32;
+            --warning: #f57c00;
+            --danger: #c62828;
+            --gray-50: #f8f9fa;
+            --gray-100: #e9ecef;
+            --gray-200: #dee2e6;
+            --gray-300: #ced4da;
+            --gray-700: #495057;
+            --gray-900: #212529;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Professional Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #002244 100%);
+            color: white;
+            padding: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="80" cy="20" r="8" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="50" r="12" fill="rgba(255,255,255,0.07)"/><circle cx="70" cy="80" r="10" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right center;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            background-color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo i {
+            color: var(--secondary);
+            font-size: 2.2rem;
+        }
+        
+        .brand-text h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+        
+        .brand-text p {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Main Content */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        @media (max-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--gray-200);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary);
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .card-title i {
+            color: var(--accent);
+        }
+        
+        /* Input Groups */
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        .input-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--gray-900);
+            font-size: 1.05rem;
+        }
+        
+        .input-hint {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .slider-container {
+            background: var(--gray-50);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 10px;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .slider-value small {
+            font-size: 1rem;
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: var(--gray-300);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--secondary);
+            cursor: pointer;
+            border: 4px solid white;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .select-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .select-option {
+            display: flex;
+            align-items: center;
+            padding: 15px 18px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        .select-option:hover {
+            border-color: var(--accent);
+            background-color: rgba(0, 153, 204, 0.05);
+        }
+        
+        .select-option.selected {
+            border-color: var(--secondary);
+            background-color: rgba(204, 51, 0, 0.05);
+            position: relative;
+        }
+        
+        .select-option.selected::after {
+            content: '';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+        }
+        
+        .select-option input {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        
+        /* 20p Test Visual */
+        .coin-test {
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 25px;
+            border-left: 5px solid var(--accent);
+        }
+        
+        .coin-test-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .coin-test-header i {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+        
+        .coin-test-header h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+        
+        .coin-visual-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .coin-visual {
+            flex-shrink: 0;
+        }
+        
+        .coin {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #92400e;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #92400e;
+        }
+        
+        .coin-band {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #92400e;
+            transition: height 0.5s ease;
+        }
+        
+        .coin-test-result {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .result-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .result-safe {
+            background-color: rgba(46, 125, 50, 0.1);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+        
+        .result-warning {
+            background-color: rgba(245, 124, 0, 0.1);
+            color: var(--warning);
+            border-left: 4px solid var(--warning);
+        }
+        
+        .result-danger {
+            background-color: rgba(198, 40, 40, 0.1);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+        
+        /* Results Section */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .result-card {
+            border-radius: 10px;
+            padding: 25px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .result-card-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .result-card-title i {
+            font-size: 1.5rem;
+        }
+        
+        .status-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            grid-column: 1 / -1;
+        }
+        
+        .prediction-card {
+            background: linear-gradient(135deg, var(--success) 0%, #1b5e20 100%);
+        }
+        
+        .safety-card {
+            background: linear-gradient(135deg, var(--warning) 0%, #e65100 100%);
+        }
+        
+        .recommendation-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, #b32e00 100%);
+            grid-column: 1 / -1;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stats-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .safety-bars {
+            margin-top: 15px;
+        }
+        
+        .safety-bar {
+            margin-bottom: 15px;
+        }
+        
+        .safety-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        
+        .bar-container {
+            height: 12px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 1s ease;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--secondary);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Chart Section */
+        .chart-section {
+            margin: 40px 0;
+        }
+        
+        .chart-container {
+            height: 500px;
+            margin-top: 20px;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 40px 0 30px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+        
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .footer-section p, .footer-section li {
+            opacity: 0.8;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-section li i {
+            color: var(--accent);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* Call to Action */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 60px 0;
+            box-shadow: 0 10px 30px rgba(0, 51, 102, 0.2);
+        }
+        
+        .cta-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .cta-text {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .btn-cta {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn-cta:hover {
+            background-color: var(--secondary-light);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(204, 51, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Professional Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-tire"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1>TyreForge</h1>
+                        <p>Professional Tyre Wear Analysis</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-outline">
+                        <i class="fas fa-question-circle"></i> Help
+                    </button>
+                    <button class="btn-outline">
+                        <i class="fas fa-user"></i> Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Main Calculator -->
+        <div class="main-grid">
+            <!-- Input Section -->
+            <div class="input-section">
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-cog"></i> Tyre Configuration
+                    </h2>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Current Tread Depth</label>
+                        <p class="input-hint">Measure the deepest groove of your tyre tread in millimetres</p>
+                        <div class="slider-container">
+                            <div class="slider-value">
+                                <span id="depth-value">5.0</span><small>mm</small>
+                            </div>
+                            <input type="range" id="depth-slider" min="1.0" max="8.0" step="0.1" value="5.0">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Miles on Tyres</label>
+                        <p class="input-hint">Total mileage since tyres were fitted</p>
+                        <div class="slider-container">
+                            <div class="slider-value">
+                                <span id="miles-value">15,000</span><small>miles</small>
+                            </div>
+                            <input type="range" id="miles-slider" min="0" max="50000" step="1000" value="15000">
+                        </div>
+                    </div>
+                    
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label class="input-label">Tyre Type</label>
+                            <div class="select-group" id="tyre-type-group">
+                                <div class="select-option selected" data-value="budget">
+                                    <input type="radio" name="tyre-type" value="budget" id="budget" checked>
+                                    <label for="budget">Budget</label>
+                                </div>
+                                <div class="select-option" data-value="mid">
+                                    <input type="radio" name="tyre-type" value="mid" id="mid">
+                                    <label for="mid">Mid-Range</label>
+                                </div>
+                                <div class="select-option" data-value="premium">
+                                    <input type="radio" name="tyre-type" value="premium" id="premium">
+                                    <label for="premium">Premium</label>
+                                </div>
+                                <div class="select-option" data-value="performance">
+                                    <input type="radio" name="tyre-type" value="performance" id="performance">
+                                    <label for="performance">Performance</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Driving Style</label>
+                            <div class="select-group" id="driving-style-group">
+                                <div class="select-option selected" data-value="gentle">
+                                    <input type="radio" name="driving-style" value="gentle" id="gentle" checked>
+                                    <label for="gentle">Motorway Commuter</label>
+                                </div>
+                                <div class="select-option" data-value="normal">
+                                    <input type="radio" name="driving-style" value="normal" id="normal">
+                                    <label for="normal">Mixed Driving</label>
+                                </div>
+                                <div class="select-option" data-value="aggressive">
+                                    <input type="radio" name="driving-style" value="aggressive" id="aggressive">
+                                    <label for="aggressive">City + Spirited</label>
+                                </div>
+                                <div class="select-option" data-value="extreme">
+                                    <input type="radio" name="driving-style" value="extreme" id="extreme">
+                                    <label for="extreme">Performance/Track</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Road Conditions</label>
+                        <div class="select-group" id="road-conditions-group">
+                            <div class="select-option selected" data-value="smooth">
+                                <input type="radio" name="road-conditions" value="smooth" id="smooth" checked>
+                                <label for="smooth">Smooth Tarmac</label>
+                            </div>
+                            <div class="select-option" data-value="normal">
+                                <input type="radio" name="road-conditions" value="normal" id="normal-road">
+                                <label for="normal-road">Normal Roads</label>
+                            </div>
+                            <div class="select-option" data-value="rough">
+                                <input type="radio" name="road-conditions" value="rough" id="rough">
+                                <label for="rough">Rough/Rural</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="coin-test">
+                        <div class="coin-test-header">
+                            <i class="fas fa-coins"></i>
+                            <h3>The 20p Test Guide</h3>
+                        </div>
+                        <div class="coin-visual-container">
+                            <div class="coin-visual">
+                                <div class="coin">
+                                    20p
+                                    <div class="coin-band" id="coin-band" style="height: 37.5%"></div>
+                                </div>
+                            </div>
+                            <div class="coin-test-result">
+                                <div class="result-indicator result-safe" id="coin-test-result">
+                                    ✅ Above 3mm - Safe
+                                </div>
+                                <p>Insert a 20p coin into your tyre tread. If you can see the outer band, your tyres are below 3mm and need replacing soon.</p>
+                                <p style="margin-top: 10px; font-weight: 600;">Adjust the slider above to match your actual tread depth.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="results-grid">
+                    <div class="result-card status-card">
+                        <div class="result-card-title">
+                            <span><i class="fas fa-clipboard-check"></i> CURRENT STATUS</span>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-label">Tread Depth</div>
+                            <div class="stat-value" id="current-depth">5.0 mm</div>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-label">Legal Status (1.6mm min)</div>
+                            <div class="stat-value" id="legal-status">✅ PASS</div>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-label">Safety Status (3mm rec)</div>
+                            <div class="stat-value" id="safe-status">⚠️ MARGINAL</div>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-label">Miles on Tyres</div>
+                            <div class="stat-value" id="current-mileage">15,000</div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card prediction-card">
+                        <div class="result-card-title">
+                            <span><i class="fas fa-chart-line"></i> PREDICTIONS</span>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-label">Miles until 3mm</div>
+                            <div class="stat-value" id="miles-to-3mm">2,400</div>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-label">Miles until 1.6mm</div>
+                            <div class="stat-value" id="miles-to-legal">7,200</div>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-label">Time to replacement</div>
+                            <div class="stat-value" id="time-to-replace">3.2 months</div>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-label">Based on (annual avg)</div>
+                            <div class="stat-value">12,000 miles</div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card safety-card">
+                        <div class="result-card-title">
+                            <span><i class="fas fa-shield-alt"></i> SAFETY IMPACT</span>
+                        </div>
+                        <p style="margin-bottom: 15px; opacity: 0.9;">Stopping distance at 30mph on wet road:</p>
+                        
+                        <div class="safety-bars">
+                            <div class="safety-bar">
+                                <div class="safety-bar-label">
+                                    <span>New tyres (8mm)</span>
+                                    <span>25m</span>
+                                </div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" id="new-distance-bar" style="width: 55%; background-color: #2e7d32;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="safety-bar">
+                                <div class="safety-bar-label">
+                                    <span>Your tyres (<span id="safety-depth">5.0</span>mm)</span>
+                                    <span id="current-distance">32m</span>
+                                </div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" id="current-distance-bar" style="width: 70%; background-color: #f57c00;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="safety-bar">
+                                <div class="safety-bar-label">
+                                    <span>Legal limit (1.6mm)</span>
+                                    <span>45m</span>
+                                </div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" id="legal-distance-bar" style="width: 100%; background-color: #c62828;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p style="margin-top: 20px; font-weight: 600;" id="safety-note">
+                            +7m longer stopping distance (3 car lengths)
+                        </p>
+                    </div>
+                    
+                    <div class="result-card recommendation-card">
+                        <div class="result-card-title">
+                            <span><i class="fas fa-lightbulb"></i> RECOMMENDATION</span>
+                        </div>
+                        <p style="margin-bottom: 20px; font-size: 1.1rem;" id="recommendation-text">
+                            ⚠️ Plan replacement within 2,400 miles. Book before winter for safety.
+                        </p>
+                        
+                        <div class="stats-row">
+                            <div class="stat-label">Estimated replacement cost</div>
+                            <div class="stat-value" id="replacement-cost">£280</div>
+                        </div>
+                        
+                        <div class="stats-row">
+                            <div class="stat-label">Risk increase vs new tyres</div>
+                            <div class="stat-value" id="risk-increase">180%</div>
+                        </div>
+                        
+                        <button class="btn-primary" id="book-appointment">
+                            <i class="fas fa-calendar-alt"></i> Book Tyre Appointment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-area"></i> Tyre Wear Decay Curve
+                </h2>
+                <p style="margin-bottom: 20px; color: var(--gray-700);">
+                    Visual representation of your tyre wear over time based on current configuration.
+                </p>
+                <div id="tyre-wear-chart" class="chart-container"></div>
+            </div>
+        </div>
+        
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <h2 class="cta-title">Need New Tyres?</h2>
+            <p class="cta-text">
+                Book a professional tyre fitting with our certified technicians. 
+                We offer competitive prices on all major brands with free safety checks.
+            </p>
+            <button class="btn-cta">
+                <i class="fas fa-phone-alt"></i> Call to Book: 0800 123 4567
+            </button>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About TyreForge</h3>
+                    <p>TyreForge provides professional tyre wear analysis using advanced predictive algorithms. Our tool helps drivers make informed decisions about tyre replacement for optimal safety and value.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Safety Information</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Legal minimum tread: 1.6mm</li>
+                        <li><i class="fas fa-check-circle"></i> Recommended replacement: 3mm</li>
+                        <li><i class="fas fa-check-circle"></i> Check tyres monthly</li>
+                        <li><i class="fas fa-check-circle"></i> Replace in pairs when possible</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Automotive Way, Birmingham B1 1AA</p>
+                    <p><i class="fas fa-phone"></i> 0800 123 4567</p>
+                    <p><i class="fas fa-envelope"></i> info@tyreforge.com</p>
+                    <p><i class="fas fa-clock"></i> Mon-Fri: 8am-6pm, Sat: 9am-4pm</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>TyreForge &copy; 2023 | Professional Tyre Wear Analysis Tool | All calculations are estimates. Always consult a professional for tyre safety decisions.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Constants for the tyre wear model
+        const BASE_DECAY_RATES = {
+            budget: 0.000095,
+            mid: 0.000070,
+            premium: 0.000050,
+            performance: 0.000110
+        };
+        
+        const STYLE_MULTIPLIERS = {
+            gentle: 0.7,
+            normal: 1.0,
+            aggressive: 1.4,
+            extreme: 2.5
+        };
+        
+        const SURFACE_MULTIPLIERS = {
+            smooth: 0.9,
+            normal: 1.0,
+            rough: 1.3
+        };
+        
+        // DOM Elements
+        const depthSlider = document.getElementById('depth-slider');
+        const depthValue = document.getElementById('depth-value');
+        const milesSlider = document.getElementById('miles-slider');
+        const milesValue = document.getElementById('miles-value');
+        const coinBand = document.getElementById('coin-band');
+        const coinTestResult = document.getElementById('coin-test-result');
+        const bookAppointmentBtn = document.getElementById('book-appointment');
+        
+        // Radio groups
+        const tyreTypeGroup = document.getElementById('tyre-type-group');
+        const drivingStyleGroup = document.getElementById('driving-style-group');
+        const roadConditionsGroup = document.getElementById('road-conditions-group');
+        
+        // Results elements
+        const currentDepthElement = document.getElementById('current-depth');
+        const legalStatusElement = document.getElementById('legal-status');
+        const safeStatusElement = document.getElementById('safe-status');
+        const currentMileageElement = document.getElementById('current-mileage');
+        const milesTo3mmElement = document.getElementById('miles-to-3mm');
+        const milesToLegalElement = document.getElementById('miles-to-legal');
+        const timeToReplaceElement = document.getElementById('time-to-replace');
+        const safetyDepthElement = document.getElementById('safety-depth');
+        const currentDistanceElement = document.getElementById('current-distance');
+        const newDistanceBar = document.getElementById('new-distance-bar');
+        const currentDistanceBar = document.getElementById('current-distance-bar');
+        const legalDistanceBar = document.getElementById('legal-distance-bar');
+        const safetyNoteElement = document.getElementById('safety-note');
+        const recommendationText = document.getElementById('recommendation-text');
+        const replacementCostElement = document.getElementById('replacement-cost');
+        const riskIncreaseElement = document.getElementById('risk-increase');
+        
+        // Chart element
+        const chartElement = document.getElementById('tyre-wear-chart');
+        
+        // Initialize radio buttons
+        function initRadioGroups() {
+            // Tyre type
+            const tyreOptions = tyreTypeGroup.querySelectorAll('.select-option');
+            tyreOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    tyreOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    option.querySelector('input').checked = true;
+                    calculateTyreWear();
+                });
+            });
+            
+            // Driving style
+            const drivingOptions = drivingStyleGroup.querySelectorAll('.select-option');
+            drivingOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    drivingOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    option.querySelector('input').checked = true;
+                    calculateTyreWear();
+                });
+            });
+            
+            // Road conditions
+            const roadOptions = roadConditionsGroup.querySelectorAll('.select-option');
+            roadOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    roadOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    option.querySelector('input').checked = true;
+                    calculateTyreWear();
+                });
+            });
+        }
+        
+        // Update coin visual based on tread depth
+        function updateCoinVisual(depth) {
+            // Coin band height is inversely proportional to tread depth
+            let bandHeight = 0;
+            if (depth <= 1.0) {
+                bandHeight = 100;
+            } else if (depth >= 8.0) {
+                bandHeight = 0;
+            } else {
+                // Linear interpolation between 1mm (100%) and 8mm (0%)
+                bandHeight = 100 - ((depth - 1.0) / 7.0) * 100;
+            }
+            
+            coinBand.style.height = `${bandHeight}%`;
+            
+            // Update coin test result text and styling
+            if (depth >= 3.0) {
+                coinTestResult.innerHTML = '✅ Above 3mm - Safe';
+                coinTestResult.className = 'result-indicator result-safe';
+            } else if (depth >= 1.6) {
+                coinTestResult.innerHTML = '⚠️ Below 3mm - Replace Soon';
+                coinTestResult.className = 'result-indicator result-warning';
+            } else {
+                coinTestResult.innerHTML = '❌ Below Legal Limit - Replace Now';
+                coinTestResult.className = 'result-indicator result-danger';
+            }
+        }
+        
+        // Calculate the decay constant k
+        function calculateDecayConstant() {
+            const tyreType = document.querySelector('input[name="tyre-type"]:checked').value;
+            const drivingStyle = document.querySelector('input[name="driving-style"]:checked').value;
+            const roadConditions = document.querySelector('input[name="road-conditions"]:checked').value;
+            
+            const baseRate = BASE_DECAY_RATES[tyreType];
+            const styleMultiplier = STYLE_MULTIPLIERS[drivingStyle];
+            const surfaceMultiplier = SURFACE_MULTIPLIERS[roadConditions];
+            
+            return baseRate * styleMultiplier * surfaceMultiplier;
+        }
+        
+        // Calculate miles until target depth
+        function calculateMilesToDepth(currentDepth, targetDepth, k) {
+            if (currentDepth <= targetDepth || k <= 0) return 0;
+            return (1 / k) * Math.log(currentDepth / targetDepth);
+        }
+        
+        // Calculate tread depth at given miles
+        function calculateDepthAtMiles(initialDepth, miles, k) {
+            return initialDepth * Math.exp(-k * miles);
+        }
+        
+        // Calculate stopping distance based on tread depth
+        function calculateStoppingDistance(depth) {
+            // Base stopping distance at 30mph on wet road with new tyres (8mm)
+            const baseDistance = 25; // meters
+            
+            // Increase factor based on tread depth
+            let increaseFactor;
+            if (depth >= 8) {
+                increaseFactor = 0;
+            } else if (depth >= 3) {
+                // Linear increase from 0% to 40% as depth goes from 8mm to 3mm
+                increaseFactor = 0.4 * (8 - depth) / 5;
+            } else if (depth >= 1.6) {
+                // Linear increase from 40% to 80% as depth goes from 3mm to 1.6mm
+                increaseFactor = 0.4 + 0.4 * (3 - depth) / 1.4;
+            } else {
+                // At 1.6mm, 80% increase, at 0mm, 100% increase
+                increaseFactor = 0.8 + 0.2 * (1.6 - depth) / 1.6;
+            }
+            
+            const distance = baseDistance * (1 + increaseFactor);
+            return Math.round(distance * 10) / 10;
+        }
+        
+        // Generate recommendation text
+        function generateRecommendation(currentDepth, milesTo3mm, monthsToReplace) {
+            if (currentDepth < 1.6) {
+                return "❌ Replace tyres immediately! Your tyres are below the legal limit and unsafe.";
+            } else if (currentDepth < 3) {
+                return "⚠️ Replace tyres urgently. Your tyres are below the recommended 3mm safety threshold.";
+            } else if (milesTo3mm < 2000) {
+                return `⚠️ Plan replacement within ${Math.round(milesTo3mm)} miles (${monthsToReplace} months). Consider replacing before winter.`;
+            } else if (milesTo3mm < 5000) {
+                return `ℹ️ Your tyres are approaching replacement. Plan to replace in approximately ${Math.round(milesTo3mm/1000)}k miles.`;
+            } else {
+                return `✅ Your tyres are in good condition. Monitor tread depth regularly.`;
+            }
+        }
+        
+        // Calculate risk increase percentage
+        function calculateRiskIncrease(currentDepth) {
+            if (currentDepth >= 8) return 0;
+            if (currentDepth >= 3) return Math.round(((8 - currentDepth) / 5) * 100);
+            if (currentDepth >= 1.6) return Math.round(100 + ((3 - currentDepth) / 1.4) * 80);
+            return Math.round(180 + ((1.6 - currentDepth) / 1.6) * 100);
+        }
+        
+        // Calculate tyre wear and update UI
+        function calculateTyreWear() {
+            // Get current values
+            const currentDepth = parseFloat(depthSlider.value);
+            const currentMiles = parseInt(milesSlider.value);
+            
+            // Update displays
+            depthValue.textContent = currentDepth.toFixed(1);
+            milesValue.textContent = currentMiles.toLocaleString();
+            
+            // Update coin visual
+            updateCoinVisual(currentDepth);
+            
+            // Calculate decay constant
+            const k = calculateDecayConstant();
+            
+            // Calculate miles to safety and legal limits
+            const milesTo3mm = calculateMilesToDepth(currentDepth, 3.0, k);
+            const milesToLegal = calculateMilesToDepth(currentDepth, 1.6, k);
+            
+            // Calculate time to replace (assuming 12,000 miles per year)
+            const annualMileage = 12000;
+            const monthsToReplace = Math.round((milesTo3mm / annualMileage) * 12 * 10) / 10;
+            
+            // Calculate safety distances
+            const newTyreDistance = calculateStoppingDistance(8);
+            const currentDistance = calculateStoppingDistance(currentDepth);
+            const legalDistance = calculateStoppingDistance(1.6);
+            
+            // Calculate extra distance compared to new tyres
+            const extraDistance = currentDistance - newTyreDistance;
+            const carLengths = Math.round(extraDistance / 2.5); // Assuming average car length of 2.5m
+            
+            // Generate recommendation
+            const recommendation = generateRecommendation(currentDepth, milesTo3mm, monthsToReplace);
+            const riskIncrease = calculateRiskIncrease(currentDepth);
+            
+            // Update UI with results
+            currentDepthElement.textContent = `${currentDepth.toFixed(1)} mm`;
+            currentMileageElement.textContent = currentMiles.toLocaleString();
+            
+            // Update legal and safety status
+            if (currentDepth >= 1.6) {
+                legalStatusElement.textContent = '✅ PASS';
+                legalStatusElement.style.color = '#2e7d32';
+            } else {
+                legalStatusElement.textContent = '❌ FAIL';
+                legalStatusElement.style.color = '#c62828';
+            }
+            
+            if (currentDepth >= 3.0) {
+                safeStatusElement.textContent = '✅ GOOD';
+                safeStatusElement.style.color = '#2e7d32';
+            } else if (currentDepth >= 2.0) {
+                safeStatusElement.textContent = '⚠️ MARGINAL';
+                safeStatusElement.style.color = '#f57c00';
+            } else {
+                safeStatusElement.textContent = '❌ POOR';
+                safeStatusElement.style.color = '#c62828';
+            }
+            
+            // Update predictions
+            milesTo3mmElement.textContent = Math.max(0, Math.round(milesTo3mm)).toLocaleString();
+            milesToLegalElement.textContent = Math.max(0, Math.round(milesToLegal)).toLocaleString();
+            timeToReplaceElement.textContent = monthsToReplace;
+            
+            // Update safety impact
+            safetyDepthElement.textContent = currentDepth.toFixed(1);
+            currentDistanceElement.textContent = `${currentDistance}m`;
+            
+            // Update distance bars (visual representation)
+            const maxDistance = 50; // Max distance for visualization
+            newDistanceBar.style.width = `${(newTyreDistance / maxDistance) * 100}%`;
+            currentDistanceBar.style.width = `${(currentDistance / maxDistance) * 100}%`;
+            legalDistanceBar.style.width = `${(legalDistance / maxDistance) * 100}%`;
+            
+            // Update safety note
+            if (extraDistance > 0) {
+                safetyNoteElement.textContent = `+${extraDistance.toFixed(1)}m longer stopping distance (${carLengths} car lengths)`;
+            } else {
+                safetyNoteElement.textContent = 'Same stopping distance as new tyres';
+            }
+            
+            // Update recommendation
+            recommendationText.textContent = recommendation;
+            replacementCostElement.textContent = '£' + (280 + (currentDepth < 3 ? 0 : 0));
+            riskIncreaseElement.textContent = `${riskIncrease}%`;
+            
+            // Update the chart
+            updateChart(currentDepth, currentMiles, k);
+        }
+        
+        // Update the chart with tyre wear curve
+        function updateChart(currentDepth, currentMiles, k) {
+            // Generate data points for the curve
+            const maxMiles = 60000;
+            const mileStep = maxMiles / 100;
+            const dataPoints = [];
+            
+            // Calculate initial depth based on current depth and miles
+            const initialDepth = currentDepth * Math.exp(k * currentMiles);
+            
+            for (let miles = 0; miles <= maxMiles; miles += mileStep) {
+                const depth = initialDepth * Math.exp(-k * miles);
+                dataPoints.push({
+                    miles: miles,
+                    depth: Math.max(0, depth)
+                });
+            }
+            
+            // Create trace for the decay curve
+            const decayTrace = {
+                x: dataPoints.map(point => point.miles),
+                y: dataPoints.map(point => point.depth),
+                mode: 'lines',
+                name: 'Your Tyre Wear',
+                line: {
+                    color: '#cc3300',
+                    width: 4
+                },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(204, 51, 0, 0.1)'
+            };
+            
+            // Create trace for current position
+            const currentTrace = {
+                x: [currentMiles],
+                y: [currentDepth],
+                mode: 'markers',
+                name: 'Current Position',
+                marker: {
+                    color: '#003366',
+                    size: 14,
+                    symbol: 'circle',
+                    line: {
+                        color: 'white',
+                        width: 3
+                    }
+                },
+                hovertemplate: `Current: ${currentDepth.toFixed(1)}mm at ${currentMiles.toLocaleString()} miles<extra></extra>`
+            };
+            
+            // Horizontal lines for thresholds
+            const newTyreLine = {
+                x: [0, maxMiles],
+                y: [8, 8],
+                mode: 'lines',
+                name: 'New Tyre (8mm)',
+                line: {
+                    color: '#2e7d32',
+                    width: 2,
+                    dash: 'dash'
+                }
+            };
+            
+            const recommendedLine = {
+                x: [0, maxMiles],
+                y: [3, 3],
+                mode: 'lines',
+                name: 'Replace Recommended (3mm)',
+                line: {
+                    color: '#f57c00',
+                    width: 2,
+                    dash: 'dash'
+                }
+            };
+            
+            const legalLine = {
+                x: [0, maxMiles],
+                y: [1.6, 1.6],
+                mode: 'lines',
+                name: 'Legal Minimum (1.6mm)',
+                line: {
+                    color: '#c62828',
+                    width: 2,
+                    dash: 'dash'
+                }
+            };
+            
+            const layout = {
+                title: 'Tyre Wear Projection',
+                xaxis: {
+                    title: 'Miles Driven',
+                    range: [0, maxMiles],
+                    gridcolor: '#e9ecef',
+                    showgrid: true,
+                    zeroline: false
+                },
+                yaxis: {
+                    title: 'Tread Depth (mm)',
+                    range: [0, 9],
+                    gridcolor: '#e9ecef',
+                    showgrid: true
+                },
+                plot_bgcolor: 'white',
+                paper_bgcolor: 'white',
+                hovermode: 'x unified',
+                showlegend: true,
+                legend: {
+                    orientation: 'h',
+                    y: -0.2,
+                    x: 0.5,
+                    xanchor: 'center'
+                },
+                shapes: [
+                    // Green zone (8-3mm): Safe operation
+                    {
+                        type: 'rect',
+                        xref: 'x',
+                        yref: 'y',
+                        x0: 0,
+                        x1: maxMiles,
+                        y0: 3,
+                        y1: 8,
+                        fillcolor: 'rgba(46, 125, 50, 0.1)',
+                        line: {width: 0}
+                    },
+                    // Yellow zone (3-2mm): Plan replacement
+                    {
+                        type: 'rect',
+                        xref: 'x',
+                        yref: 'y',
+                        x0: 0,
+                        x1: maxMiles,
+                        y0: 2,
+                        y1: 3,
+                        fillcolor: 'rgba(245, 124, 0, 0.1)',
+                        line: {width: 0}
+                    },
+                    // Red zone (2-1.6mm): Replace urgently
+                    {
+                        type: 'rect',
+                        xref: 'x',
+                        yref: 'y',
+                        x0: 0,
+                        x1: maxMiles,
+                        y0: 1.6,
+                        y1: 2,
+                        fillcolor: 'rgba(198, 40, 40, 0.1)',
+                        line: {width: 0}
+                    }
+                ],
+                annotations: [
+                    {
+                        x: maxMiles * 0.85,
+                        y: 7,
+                        text: 'Safe Zone',
+                        showarrow: false,
+                        font: {color: '#2e7d32', size: 12, weight: 'bold'}
+                    },
+                    {
+                        x: maxMiles * 0.85,
+                        y: 2.5,
+                        text: 'Plan Replacement',
+                        showarrow: false,
+                        font: {color: '#f57c00', size: 12, weight: 'bold'}
+                    },
+                    {
+                        x: maxMiles * 0.85,
+                        y: 1.8,
+                        text: 'Replace Urgently',
+                        showarrow: false,
+                        font: {color: '#c62828', size: 12, weight: 'bold'}
+                    }
+                ]
+            };
+            
+            const config = {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false,
+                modeBarButtonsToRemove: ['lasso2d', 'select2d']
+            };
+            
+            Plotly.newPlot(
+                chartElement,
+                [decayTrace, currentTrace, newTyreLine, recommendedLine, legalLine],
+                layout,
+                config
+            );
+        }
+        
+        // Initialize the application
+        function initApp() {
+            // Set up event listeners
+            depthSlider.addEventListener('input', () => {
+                calculateTyreWear();
+            });
+            
+            milesSlider.addEventListener('input', () => {
+                calculateTyreWear();
+            });
+            
+            bookAppointmentBtn.addEventListener('click', () => {
+                alert("Thank you for your interest! In a real application, this would connect to our booking system.");
+            });
+            
+            // Initialize radio groups
+            initRadioGroups();
+            
+                        // Initial calculation
+            calculateTyreWear();
+        }
+        
+        // Initialize radio button groups
+        function initRadioGroups() {
+            const radioGroups = document.querySelectorAll('.radio-group');
+            
+            radioGroups.forEach(group => {
+                const options = group.querySelectorAll('.radio-option');
+                
+                options.forEach(option => {
+                    option.addEventListener('click', () => {
+                        // Remove selected class from all options in this group
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        
+                        // Add selected class to clicked option
+                        option.classList.add('selected');
+                        
+                        // Recalculate
+                        calculateTyreWear();
+                    });
+                });
+            });
+        }
+        
+        // Start the app when DOM is ready
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
