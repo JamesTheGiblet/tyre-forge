@@ -224,6 +224,7 @@
             background: var(--gray-300);
             outline: none;
             -webkit-appearance: none;
+            appearance: none;
         }
         
         input[type="range"]::-webkit-slider-thumb {
@@ -670,7 +671,7 @@
                             <div class="slider-value">
                                 <span id="depth-value">5.0</span><small>mm</small>
                             </div>
-                            <input type="range" id="depth-slider" min="1.0" max="8.0" step="0.1" value="5.0">
+                            <input type="range" id="depth-slider" min="1.0" max="8.0" step="0.1" value="5.0" title="Current Tread Depth in millimetres">
                         </div>
                     </div>
                     
@@ -681,7 +682,7 @@
                             <div class="slider-value">
                                 <span id="miles-value">15,000</span><small>miles</small>
                             </div>
-                            <input type="range" id="miles-slider" min="0" max="50000" step="1000" value="15000">
+                            <input type="range" id="miles-slider" min="0" max="50000" step="1000" value="15000" title="Miles on Tyres">
                         </div>
                     </div>
                     
