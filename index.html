@@ -626,6 +626,318 @@
             transform: translateY(-5px);
             box-shadow: 0 12px 25px rgba(204, 51, 0, 0.3);
         }
+        
+        /* Pro Features */
+        .pro-badge {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-left: 8px;
+            vertical-align: middle;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: inline-block;
+        }
+
+        .locked-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.3) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .locked-content {
+            filter: blur(8px);
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.5;
+            transform: scale(0.98);
+            transition: all 0.3s ease;
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .lock-icon {
+            font-size: 2rem;
+            color: #DAA520;
+            margin-bottom: 20px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1), -5px -5px 15px rgba(255,255,255,0.8);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .btn-unlock {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 165, 0, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-unlock::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-unlock:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(255, 165, 0, 0.4);
+        }
+
+        .btn-unlock:hover::after {
+            left: 100%;
+        }
+
+        .lock-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #333 0%, #000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #333;
+        }
+        
+        .lock-desc {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 25px;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray-700);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pricing-card {
+            border: 2px solid var(--gray-200);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.popular {
+            border-color: #FFD700;
+            background: linear-gradient(to bottom, #fff, #fffbf0);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.15);
+        }
+
+        .popular-tag {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FFD700;
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--gray-700);
+            font-weight: 400;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .features-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features-list li i {
+            color: var(--success);
+        }
+
+        .btn-pricing {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-pricing:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-pricing.primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 51, 102, 0.3);
+        }
+
+        .btn-pricing.primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .modal-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -643,6 +955,9 @@
                     </div>
                 </div>
                 <div class="header-actions">
+                    <button class="btn-outline" id="header-pro-btn" style="border-color: #FFD700; color: #FFD700;">
+                        <i class="fas fa-crown"></i> Go Pro
+                    </button>
                     <button class="btn-outline">
                         <i class="fas fa-question-circle"></i> Help
                     </button>
@@ -886,6 +1201,37 @@
                             <i class="fas fa-calendar-alt"></i> Book Tyre Appointment
                         </button>
                     </div>
+                    
+                    <!-- Pro Features Locked Card -->
+                    <div class="result-card locked-card" style="background: white; color: var(--gray-900); grid-column: 1 / -1;">
+                        <div class="lock-overlay">
+                            <div class="lock-icon"><i class="fas fa-lock"></i></div>
+                            <h3 class="lock-title">Pro Analysis Locked</h3>
+                            <p class="lock-desc">Unlock advanced fleet metrics, compound efficiency analysis, and detailed savings projections.</p>
+                            <button class="btn-unlock">Unlock Pro Features</button>
+                        </div>
+                        <div class="locked-content">
+                            <div class="result-card-title" style="color: var(--primary); border-bottom: 1px solid var(--gray-200);">
+                                <span><i class="fas fa-chart-pie"></i> ADVANCED METRICS</span>
+                                <span class="pro-badge">PRO</span>
+                            </div>
+                            <div class="results-grid" style="grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
+                                <div>
+                                    <div class="stat-label" style="color: var(--gray-700);">Compound Efficiency</div>
+                                    <div class="stat-value" style="color: var(--primary);">87%</div>
+                                </div>
+                                <div>
+                                    <div class="stat-label" style="color: var(--gray-700);">Projected Savings</div>
+                                    <div class="stat-value" style="color: var(--success);">£1,240</div>
+                                </div>
+                                <div>
+                                    <div class="stat-label" style="color: var(--gray-700);">Fleet Risk Score</div>
+                                    <div class="stat-value" style="color: var(--primary);">2.4</div>
+                                </div>
+                            </div>
+                            <div style="height: 100px; background: #f8f9fa; margin-top: 20px; border-radius: 8px; border: 1px dashed var(--gray-300);"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -940,6 +1286,8 @@
                     <p><i class="fas fa-map-marker-alt"></i> 123 Automotive Way, Birmingham B1 1AA</p>
                     <p><i class="fas fa-phone"></i> 0800 123 4567</p>
                     <p><i class="fas fa-envelope"></i> info@tyreforge.com</p>
+                    <p><i class="fas fa-phone"></i> 07930057731</p>
+                    <p><i class="fas fa-envelope"></i> gibetscreations@gmail.com</p>
                     <p><i class="fas fa-clock"></i> Mon-Fri: 8am-6pm, Sat: 9am-4pm</p>
                 </div>
             </div>
@@ -949,6 +1297,43 @@
             </div>
         </div>
     </footer>
+
+    <!-- Pro Features Modal -->
+    <div class="modal-overlay" id="pro-modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-crown"></i></div>
+                <h2>Upgrade to TyreForge PRO</h2>
+                <p>Unlock the full potential of your tyre analysis</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Monthly</h3>
+                    <div class="price">£4.99<span>/mo</span></div>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i> Advanced Compound Analysis</li>
+                        <li><i class="fas fa-check"></i> Fleet Management Tools</li>
+                        <li><i class="fas fa-check"></i> Detailed Savings Reports</li>
+                    </ul>
+                    <button class="btn-pricing">Select Monthly</button>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="popular-tag">BEST VALUE</div>
+                    <h3>Annual</h3>
+                    <div class="price">£39.99<span>/yr</span></div>
+                    <p class="savings" style="color: var(--success); font-weight: bold; margin-bottom: 10px;">Save 33%</p>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check"></i> All Monthly Features</li>
+                        <li><i class="fas fa-check"></i> Priority Support</li>
+                        <li><i class="fas fa-check"></i> Export to PDF/CSV</li>
+                    </ul>
+                    <button class="btn-pricing primary">Select Annual</button>
+                </div>
+            </div>
+            <p class="modal-footer">Secure payment via Stripe. Cancel anytime.</p>
+        </div>
+    </div>
 
     <script>
         // Constants for the tyre wear model
@@ -1232,6 +1617,9 @@
             
             // Update the chart
             updateChart(currentDepth, currentMiles, k);
+            
+            // Save configuration
+            saveConfiguration();
         }
         
         // Update the chart with tyre wear curve
@@ -1424,6 +1812,104 @@
             );
         }
         
+        // Save current configuration to local storage
+        function saveConfiguration() {
+            const config = {
+                depth: depthSlider.value,
+                miles: milesSlider.value,
+                tyreType: document.querySelector('input[name="tyre-type"]:checked').value,
+                drivingStyle: document.querySelector('input[name="driving-style"]:checked').value,
+                roadConditions: document.querySelector('input[name="road-conditions"]:checked').value
+            };
+            localStorage.setItem('tyreForgeConfig', JSON.stringify(config));
+        }
+
+        // Load configuration from local storage
+        function loadConfiguration() {
+            const savedConfig = localStorage.getItem('tyreForgeConfig');
+            if (!savedConfig) return;
+            
+            try {
+                const config = JSON.parse(savedConfig);
+                
+                if (config.depth) depthSlider.value = config.depth;
+                if (config.miles) milesSlider.value = config.miles;
+                
+                const updateRadioGroup = (name, value) => {
+                    if (!value) return;
+                    const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        // Update visual selection
+                        const option = radio.closest('.select-option');
+                        const group = radio.closest('.select-group');
+                        if (option && group) {
+                            group.querySelectorAll('.select-option').forEach(opt => opt.classList.remove('selected'));
+                            option.classList.add('selected');
+                        }
+                    }
+                };
+                
+                updateRadioGroup('tyre-type', config.tyreType);
+                updateRadioGroup('driving-style', config.drivingStyle);
+                updateRadioGroup('road-conditions', config.roadConditions);
+                
+            } catch (e) {
+                console.error('Error loading configuration:', e);
+            }
+        }
+
+        // Initialize Modal Functionality
+        function initModal() {
+            const modal = document.getElementById('pro-modal');
+            const unlockBtns = document.querySelectorAll('.btn-unlock');
+            const headerProBtn = document.getElementById('header-pro-btn');
+            const closeBtn = document.querySelector('.modal-close');
+            const pricingBtns = document.querySelectorAll('.btn-pricing');
+
+            function openModal() {
+                modal.style.display = 'flex';
+                // Trigger reflow
+                modal.offsetHeight;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modal.classList.remove('active');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+
+            // Add listeners
+            unlockBtns.forEach(btn => btn.addEventListener('click', openModal));
+            if (headerProBtn) headerProBtn.addEventListener('click', openModal);
+            
+            closeBtn.addEventListener('click', closeModal);
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+            });
+            
+            pricingBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const originalText = btn.innerText;
+                    btn.innerText = 'Processing...';
+                    setTimeout(() => {
+                        alert('Redirecting to payment gateway...');
+                        btn.innerText = originalText;
+                        closeModal();
+                    }, 1000);
+                });
+            });
+        }
+
         // Initialize the application
         function initApp() {
             // Set up event listeners
@@ -1442,30 +1928,14 @@
             // Initialize radio groups
             initRadioGroups();
             
+            // Load saved configuration
+            loadConfiguration();
+            
+            // Initialize Modal
+            initModal();
+            
                         // Initial calculation
             calculateTyreWear();
-        }
-        
-        // Initialize radio button groups
-        function initRadioGroups() {
-            const radioGroups = document.querySelectorAll('.radio-group');
-            
-            radioGroups.forEach(group => {
-                const options = group.querySelectorAll('.radio-option');
-                
-                options.forEach(option => {
-                    option.addEventListener('click', () => {
-                        // Remove selected class from all options in this group
-                        options.forEach(opt => opt.classList.remove('selected'));
-                        
-                        // Add selected class to clicked option
-                        option.classList.add('selected');
-                        
-                        // Recalculate
-                        calculateTyreWear();
-                    });
-                });
-            });
         }
         
         // Start the app when DOM is ready
